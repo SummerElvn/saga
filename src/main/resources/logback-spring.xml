@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <!--<timestamp>
+                    <fieldName>timestamp</fieldName>
+                    <pattern>yyyy-MM-dd'T'HH:mm:ss.SSSZ</pattern>
+                </timestamp>
+                <logLevel>
+                    <fieldName>level</fieldName>
+                </logLevel>
+                <threadName>
+                    <fieldName>thread</fieldName>
+                </threadName>
+                <loggerName>
+                    <fieldName>logger</fieldName>
+                </loggerName>-->
+                <message>
+                    <fieldName>message</fieldName>
+                </message>
+
+                <!-- Add Trace and Span IDs from MDC -->
+                <mdc>
+                    <fieldName>traceId</fieldName>
+                    <key>traceId</key>  <!-- This matches the key in the MDC populated by Micrometer -->
+                </mdc>
+                <mdc>
+                    <fieldName>spanId</fieldName>
+                    <key>spanId</key>    <!-- This matches the key in the MDC populated by Micrometer -->
+                </mdc>
+
+                <stackTrace>
+                    <fieldName>stacktrace</fieldName>
+                </stackTrace>
+            </providers>
+        </encoder>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+
+</configuration>

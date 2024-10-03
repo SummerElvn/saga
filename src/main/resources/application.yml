@@ -1,0 +1,70 @@
+spring:
+  application:
+    name: saga
+  jackson:
+    default-property-inclusion: NON_NULL # to avoid null fields in the final json response
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    listener:
+      simple:
+       default-requeue-rejected: false #Avoid Infinite Loops when there is request issue
+  datasource:
+    url: jdbc:mysql://localhost:3306/saga?socketTimeout=5000  # JDBC driver socket timeout (5 seconds)
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: root
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      max-lifetime: 1800000 # 30 minutes (Default: 30 minutes)
+      idle-timeout: 600000  # 10 minutes (Default: 10 minutes, 0 to disable)
+      connection-timeout: 30000
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+      dialect: org.hibernate.dialect.MySQLDialect
+  logging:
+    level:
+      org.hibernate.SQL: debug
+      org.hibernate.type: trace
+#    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1
+#    driver-class-name: org.h2.Driver
+#    username: sar
+#    password: password
+#    hikari:
+#      maximum-pool-size: 5
+#  h2:
+#    console:
+#      enabled: true
+#      path: /h2-console
+app:
+  queueExchange: saga.exchange
+  paymentService:
+    queues:
+      processQueueName: "payment.process.queue"
+      processQueueCreateRoute: "payment.process"
+      processQueueCompensateRoute: "payment.compensate"
+      statusQueueName: "payment.status.queue"
+      statusQueueSuccessRoute: "payment.success"
+      statusQueueFailureRoute: "payment.fail"
+  orderService:
+    queues:
+      processQueueName: "order.process.queue"
+      processQueueCreateRoute: "order.process"
+      processQueueCompensateRoute: "order.compensate"
+      statusQueueName: "order.status.queue"
+      statusQueueSuccessRoute: "order.success"
+      statusQueueFailureRoute: "order.fail"
+  shippingService:
+    queues:
+      processQueueName: "shipping.process.queue"
+      processQueueCreateRoute: "shipping.process"
+      processQueueCompensateRoute: "shipping.compensate"
+      statusQueueName: "shipping.status.queue"
+      statusQueueSuccessRoute: "shipping.success"
+      statusQueueFailureRoute: "shipping.fail"
+
